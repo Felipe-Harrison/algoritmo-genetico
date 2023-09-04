@@ -2,14 +2,14 @@
 import time
 import random
 
-class Mochila:
+class Cromossomo:
     def __init__(self, itens, tamanhoMaximo) -> None:
         self.itens = itens
         self.max = tamanhoMaximo
         self.len = len(itens)
-        pass
+        self.aptidao = 0.0
     
-    def avalia(self,itensDisponiveis):
+    def avalia(self,itensDisponiveis) -> tuple:
         tamanhoAtual = 0
         valorAtual = 0
         
@@ -18,6 +18,9 @@ class Mochila:
             valorAtual += self.itens[i] * itensDisponiveis[i]['v']
         
         eValido = tamanhoAtual < self.max
+
+        if not eValido:
+            valorAtual = -1
         
         return eValido,valorAtual
     
@@ -32,14 +35,11 @@ def teste():
     ]
     mochilaTamanho = 10
     
-    # Carregar a mochila
-    
-    
     # gerar grupo de soluções aleatórias
     
     maxTamanhoGrupo = 10
     grupo = [
-        Mochila([ random.randint(0,1) for _ in range(len(itensDisponiveis))],mochilaTamanho) for _ in range(maxTamanhoGrupo)
+        Cromossomo([ random.randint(0,1) for _ in range(len(itensDisponiveis))],mochilaTamanho) for _ in range(maxTamanhoGrupo)
     ]
     
     # loop:
@@ -49,12 +49,28 @@ def teste():
     for i in range(numInteracoes):   
         grupo.sort(key= lambda item: item.avalia(itensDisponiveis)[1], reverse=True)
 
-        for i in grupo:
-            print(i.itens,i.avalia(itensDisponiveis)[1])
-        
         # Cross over
-            # Selecionar os pais
-            # Cruzar 
+        for i in grupo:
+            print(i.itens,i.avalia(itensDisponiveis))
+        
+        # Selecionar os pais
+        populacaoInter = []
+
+        #Elitismo manter o melhor
+        populacaoInter.append(grupo[0])
+
+        while len(populacaoInter) < (maxTamanhoGrupo/2):
+            escolhido = random.randint(1,len(grupo)-1)
+            populacaoInter.append(grupo[escolhido])
+        
+        print("Pais")
+        for i in populacaoInter:
+            print(i.itens,i.avalia(itensDisponiveis))
+        
+        # Cruzar 
+
+        
+
         # Mutação dos filhos
         
         # Avaliar os filhos

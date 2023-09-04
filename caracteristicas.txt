@@ -1,0 +1,14 @@
+Algoritmo genetico
+
+Caracteristicas
+
+Cross-over
+    - Cruzar mais de pais
+    - Método da Roleta (roulette wheel selection)
+        - precisa de aptidao
+        
+
+Proxima Geração
+    - Elitismo (Sempre manter o melhor)
+    - Substituir os piores/inválidos
+
