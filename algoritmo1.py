@@ -1,5 +1,4 @@
 #Algoritmo genético para resolução de problema da mochila binária
-import time
 import random
 
 class Cromossomo:
@@ -18,7 +17,7 @@ class Cromossomo:
             tamanhoAtual += item * itensDisponiveis[i]['w']
             valorAtual += item * itensDisponiveis[i]['v']
         
-        eValido = tamanhoAtual < self.tamMochila
+        eValido = tamanhoAtual <= self.tamMochila
 
         if not eValido:
             valorAtual = -1
@@ -82,33 +81,17 @@ def realizaTorneio(grupoCromossomos,k) -> Cromossomo:
 
     return cromossomosSelecionados[0]
     
-def Main():
-
-    #itensDisponiveis = [
-    #        { 'w': 5, "v": 3, },
-    #        { 'w': 4, "v": 6, },
-     #       { 'w': 3, "v": 9, },
-    #        { 'w': 2, "v": 12, },
-    #        { 'w': 1, "v": 15, },
-    #    ]
-    #mochilaTamanhoMaximo = 10
-
-    itensDisponiveis = [
-            { 'w': 1, "v": 20, },
-            { 'w': 2, "v": 5, },
-            { 'w': 3, "v": 10, },
-            { 'w': 8, "v": 40, },
-            { 'w': 7, "v": 15, },
-            { 'w': 4, "v": 25, },
-        ]
-    mochilaTamanhoMaximo = 10
-            
+def algoritmoGenetico(
+        itensDisponiveis: list,
+        capacidadeMaxMochila: int,
+        maxTamanhoGrupo = 10,
+        numeroInteracoes = 100,  
+    ) -> list[Cromossomo]:
+    
     # gerar grupo Inicial de soluções aleatórias, Ordenado
-
-    maxTamanhoGrupo = 10
     grupo = criarGrupo(
         numCromossomos=maxTamanhoGrupo,
-        tamanhoMaximoMochila=mochilaTamanhoMaximo,
+        tamanhoMaximoMochila=capacidadeMaxMochila,
         itensDisponiveis=itensDisponiveis
     )
 
@@ -117,40 +100,36 @@ def Main():
         print(item.itens,item.valor,item.valido)
 
     # Algoritmo genetico
-    numeroInteracoes = 100
     numeroPais = maxTamanhoGrupo - 2
 
     for _ in range(numeroInteracoes):
-
+        
     # Cross over
-    
+
         # Selecionar os pais
         populacaoIntermediaria = []
 
-        #Elitismo manter o melhor
+        # Elitismo: Escolher o melhor cromossomo
         populacaoIntermediaria.append(grupo[0])
 
-        #Realizar torneio
+        # Realizar torneio
         while len(populacaoIntermediaria) < numeroPais:
             escolhido = realizaTorneio(grupo,2)
             populacaoIntermediaria.append(escolhido)
         
-        #Cruzamento
-
+        # Cruzamento
         filhos = []
         for i in range(0,numeroPais,2):
             filhos.extend(list(cruzar(populacaoIntermediaria[i],populacaoIntermediaria[i+1])))
 
-        # Mutação dos filhos
-        # Avaliar os filhos
+        # Mutação dos filhos e avaliação
         for filho in filhos:
             filho.mutacao()
             filho.avalia(itensDisponiveis)
 
-        # Reformular grupo
+    # Reformular grupo
 
-        #Manter melhor e pior e mudar os demais
-
+        # Manter melhor e pior e mudar os demais
         melhorCromossomo,piorCromossomo = grupo[0],grupo[-1]
         novogrupo = filhos
         novogrupo.extend([melhorCromossomo,piorCromossomo])
@@ -158,15 +137,7 @@ def Main():
         ordenarGrupo(novogrupo)
         grupo = novogrupo
 
-    # goto loop:
+    # endLoop
     print("Grupo Final")
     for item in grupo:
         print(item.itens,item.valor,item.valido)
-
-
-
-if __name__ == "__main__":
-    start = time.time()
-    Main()
-    finish = time.time() - start
-    print(finish)
