@@ -1,6 +1,6 @@
 #Algoritmo genético para resolução de problema da mochila binária
 import random
-from analisarResultados import registrarResultado
+from analisarResultados import analisarResultados,adicionarRegistro,registrarGrupo
 
 class Cromossomo:
     def __init__(self,itens,tamanhoMaxMochila) -> None:
@@ -20,6 +20,7 @@ class Cromossomo:
         
         eValido = tamanhoAtual <= self.tamMochila
 
+
         if not eValido:
             valorAtual = -1
         
@@ -38,7 +39,7 @@ class Cromossomo:
                 self.itens[i] = 0 if item == 1 else 1
 
 
-def cruzar(cromossomo1,cromossomo2):
+def cruzar(cromossomo1,cromossomo2) -> tuple(Cromossomo,Cromossomo):
     
     pontoCorte = random.randint(1,len(cromossomo1.itens)-1)
     head1,tail1 = cromossomo1.itens[0:pontoCorte],cromossomo1.itens[pontoCorte:]
@@ -97,11 +98,13 @@ def algoritmoGenetico(
     )
 
     # Salvar Registro
-    registrarResultado("./resultados.txt","Grupo Inicial",grupo)
+    adicionarRegistro("Grupo Inicial","./resultados.txt")
+    registrarGrupo(grupo,"./resultados.txt")
 
-    print("Grupo Inicial")
-    for item in grupo:
-        print(item.itens,item.valor,item.valido)
+    resultado = analisarResultados([item.valor for item in grupo])
+    adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}","./resultados.txt")
+    # for item in grupo:
+    #     print(item.itens,item.valor,item.valido)
 
     # Algoritmo genetico
     numeroPais = maxTamanhoGrupo - 2
@@ -142,7 +145,12 @@ def algoritmoGenetico(
         grupo = novogrupo
 
     # endLoop
-    registrarResultado("./resultados.txt","Grupo Final",grupo)
-    print("Grupo Final")
-    for item in grupo:
-        print(item.itens,item.valor,item.valido)
+    adicionarRegistro("Grupo Final","./resultados.txt")
+    registrarGrupo(grupo,"./resultados.txt")
+    resultado = analisarResultados([item.valor for item in grupo])
+    adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}","./resultados.txt")
+    # print("Grupo Final")
+    # for item in grupo:
+    #     print(item.itens,item.valor,item.valido)
+
+

@@ -27,10 +27,15 @@ def Main():
     #     ]
     # mochilaTamanhoMaximo = 10
 
-    algoritmo1(
-        itensDisponiveis=itensDisponiveis,
-        capacidadeMaxMochila=mochilaTamanhoMaximo
-    )
+    for i in range(5):
+        print(f"\nExecução {i+1}")
+        algoritmo1(
+            itensDisponiveis=itensDisponiveis,
+            capacidadeMaxMochila=mochilaTamanhoMaximo,
+            maxTamanhoGrupo = 10,
+            numeroInteracoes = 100
+        )
+    
 
 if __name__ == "__main__":
     start = time.time()
