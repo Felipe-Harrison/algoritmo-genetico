@@ -1,6 +1,7 @@
 #Algoritmo genético para resolução de problema da mochila binária
 import random
-from analisarResultados import analisarResultados,adicionarRegistro,registrarGrupo
+from inputReader import getInputs
+import time
 
 class Cromossomo:
     def __init__(self,itens,tamanhoMaxMochila) -> None:
@@ -20,9 +21,9 @@ class Cromossomo:
         
         eValido = tamanhoAtual <= self.tamMochila
 
-
+        # inválidos: valor negativo
         if not eValido:
-            valorAtual = -1
+            valorAtual *= -1
         
         # Salvar valores no cromossomo, evitar recalcular
         self.valido = eValido
@@ -39,7 +40,7 @@ class Cromossomo:
                 self.itens[i] = 0 if item == 1 else 1
 
 
-def cruzar(cromossomo1,cromossomo2) -> tuple(Cromossomo,Cromossomo):
+def cruzar(cromossomo1,cromossomo2):
     
     pontoCorte = random.randint(1,len(cromossomo1.itens)-1)
     head1,tail1 = cromossomo1.itens[0:pontoCorte],cromossomo1.itens[pontoCorte:]
@@ -74,8 +75,9 @@ def criarGrupo(numCromossomos,tamanhoMaximoMochila,itensDisponiveis) -> list[Cro
 def ordenarGrupo(grupoCromossomos) -> None:
     grupoCromossomos.sort(key= lambda item: item.valor, reverse=True)
 
-def realizaTorneio(grupoCromossomos,k) -> Cromossomo:
+def realizaTorneio(grupoCromossomos,k = 2) -> Cromossomo:
 
+    # Selecionar no grupo k elementos para fazer o torneio
     cromossomosSelecionados = random.choices(grupoCromossomos,k=k)
 
     # Seleciona o melhor
@@ -88,7 +90,9 @@ def algoritmoGenetico(
         capacidadeMaxMochila: int,
         maxTamanhoGrupo = 10,
         numeroInteracoes = 100,  
-    ) -> list[Cromossomo]:
+        taxaMutacao = 0.2,
+        taxaSubstituicao = 0.4,
+    ) -> Cromossomo:
     
     # gerar grupo Inicial de soluções aleatórias, Ordenado
     grupo = criarGrupo(
@@ -97,17 +101,16 @@ def algoritmoGenetico(
         itensDisponiveis=itensDisponiveis
     )
 
-    # Salvar Registro
-    adicionarRegistro("Grupo Inicial","./resultados.txt")
-    registrarGrupo(grupo,"./resultados.txt")
-
-    resultado = analisarResultados([item.valor for item in grupo])
-    adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}","./resultados.txt")
+    # Salvar Registro Grupo Inicial
+    # registrarResultado("./resultados3.txt","Grupo Inicial",grupo)
+    # print("Grupo Inicial")
     # for item in grupo:
     #     print(item.itens,item.valor,item.valido)
 
     # Algoritmo genetico
-    numeroPais = maxTamanhoGrupo - 2
+
+    # Definir número de pais que vão reproduzir
+    numeroPais = 2 #int(taxaSubstituicao* maxTamanhoGrupo)
 
     for _ in range(numeroInteracoes):
         
@@ -131,26 +134,48 @@ def algoritmoGenetico(
 
         # Mutação dos filhos e avaliação
         for filho in filhos:
-            filho.mutacao()
+            filho.mutacao(taxaMutacao = taxaMutacao)
             filho.avalia(itensDisponiveis)
 
     # Reformular grupo
 
-        # Manter melhor e pior e mudar os demais
-        melhorCromossomo,piorCromossomo = grupo[0],grupo[-1]
-        novogrupo = filhos
-        novogrupo.extend([melhorCromossomo,piorCromossomo])
+        # Substituir os 4 piores pelos novos filhos
+        pontoSeparacaoGrupo = (len(filhos)+1)*-1
+        del grupo[pontoSeparacaoGrupo:-1]
+        grupo.extend(filhos)
+        ordenarGrupo(grupo)
+        
+    # endLoop Interações
     
-        ordenarGrupo(novogrupo)
-        grupo = novogrupo
+    #Retornar o melhor cromossomo obtido
+    return grupo[0]
 
-    # endLoop
-    adicionarRegistro("Grupo Final","./resultados.txt")
-    registrarGrupo(grupo,"./resultados.txt")
-    resultado = analisarResultados([item.valor for item in grupo])
-    adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}","./resultados.txt")
-    # print("Grupo Final")
-    # for item in grupo:
-    #     print(item.itens,item.valor,item.valido)
-
-
+if __name__ == "__main__":
+    
+    entradas = getInputs(path="./inputs/")
+    
+    numeroExecuções = 5
+    
+    for i in range(numeroExecuções):
+        
+        print(f"Teste {i+1}")
+        with open("./outputs/genetic.out", "a+") as output_file:
+            output_file.write(f"Teste {i+1}\n")
+        
+        start_time = time.time()
+        
+        for entrada in entradas:
+            melhorResultado = algoritmoGenetico(
+                itensDisponiveis=entrada['itens'],
+                capacidadeMaxMochila=entrada['capacidadeMochila'],
+                maxTamanhoGrupo = 20,
+                numeroInteracoes = 50000,
+                taxaMutacao=0.15,
+            )
+            with open("./outputs/genetic.out", "a+") as output_file:
+                output_file.write(f"Instancia {entrada['input']} : {melhorResultado.valor}\n") 
+                
+        execution_time = time.time() - start_time
+        print(f"Execution time: {execution_time} seconds\n")
+        with open("./outputs/genetic.out", "a+") as output_file:
+            output_file.write(f"Execution time: {execution_time} seconds\n")

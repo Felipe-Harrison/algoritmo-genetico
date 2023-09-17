@@ -5,6 +5,9 @@ def analisarResultados(numeros:list) -> dict:
         'media': np.average(numeros),
         'desvio': np.std(numeros)
     }
+def analisarFrequencia(valores:list) -> dict:
+    unique, counts = np.unique(valores, return_counts=True)
+    return list(zip(unique,counts))
 
 def adicionarRegistro(registro,arquivo):
     with open(arquivo,"+a") as f:
@@ -13,14 +16,18 @@ def adicionarRegistro(registro,arquivo):
 
 def registrarGrupo(grupo,arquivo):
     with open(arquivo,'+a') as f:
-        line = f"Melhor -> Mochila: {grupo[0].itens} R${grupo[0].valor} Valido:{grupo[0].valido} \n"
-        f.write(line)
-        line = f"Pior -> Mochila: {grupo[-1].itens} R${grupo[-1].valor} Valido:{grupo[-1].valido} \n"
+        # Teste qualidade
+        # line = f"Melhor -> Mochila: {grupo[0].itens} R${grupo[0].valor} Valido:{grupo[0].valido} \n"
+        # f.write(line)
+        # line = f"Pior -> Mochila: {grupo[-1].itens} R${grupo[-1].valor} Valido:{grupo[-1].valido} \n"
+        # f.write(line)
+        
+        line = f"Instancia {arquivo}: {grupo[0].valor}\n"
         f.write(line)
         f.close()
 
 def registrarResultado(arquivo,texto,grupo):
     adicionarRegistro(texto,arquivo)
     registrarGrupo(grupo,arquivo)
-    resultado = analisarResultados([item.valor for item in grupo])
-    adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}",arquivo)
+    #resultado = analisarResultados([item.valor for item in grupo])
+    #adicionarRegistro(f"Media: {resultado['media']} Desvio: {resultado['desvio']}",arquivo)

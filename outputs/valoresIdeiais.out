@@ -1,0 +1,76 @@
+Teste 1
+Instancia input1.in : 31621
+Erro na instancia input12.in
+Instancia input3.in : 143449
+Instancia input5.in : 15785
+Instancia input6.in : 99861
+Instancia input8.in : 741
+Execution time: 16.15182328224182 seconds
+
+Teste 2
+Instancia input1.in : 31621
+Erro na instancia input12.in
+Instancia input3.in : 143449
+Instancia input5.in : 15785
+Instancia input6.in : 99861
+Instancia input8.in : 741
+Execution time: 16.987945556640625 seconds
+
+Teste 3
+Instancia input1.in : 31621
+Erro na instancia input12.in
+Instancia input3.in : 143449
+Instancia input5.in : 15785
+Instancia input6.in : 99861
+Instancia input8.in : 741
+Execution time: 17.744962215423584 seconds
+
+Teste 4
+Instancia input1.in : 31621
+Erro na instancia input12.in
+Instancia input3.in : 143449
+Instancia input5.in : 15785
+Instancia input6.in : 99861
+Instancia input8.in : 741
+Execution time: 17.484299898147583 seconds
+
+Teste 5
+Instancia input1.in : 31621
+Erro na instancia input12.in
+Instancia input3.in : 143449
+Instancia input5.in : 15785
+Instancia input6.in : 99861
+Instancia input8.in : 741
+Execution time: 16.389575719833374 seconds
+
+
+Teste 1
+Instancia input1.in : 31621
+Instancia input2.in : 67829
+Instancia input3.in : 143449
+Instancia input4.in : 28840
+Execution time: 0.3752565383911133 seconds
+Teste 2
+Instancia input1.in : 31621
+Instancia input2.in : 67829
+Instancia input3.in : 143449
+Instancia input4.in : 28840
+Execution time: 0.40584635734558105 seconds
+Teste 3
+Instancia input1.in : 31621
+Instancia input2.in : 67829
+Instancia input3.in : 143449
+Instancia input4.in : 28840
+Execution time: 0.3936920166015625 seconds
+Teste 4
+Instancia input1.in : 31621
+Instancia input2.in : 67829
+Instancia input3.in : 143449
+Instancia input4.in : 28840
+Execution time: 0.37538719177246094 seconds
+Teste 5
+Instancia input1.in : 31621
+Instancia input2.in : 67829
+Instancia input3.in : 143449
+Instancia input4.in : 28840
+Execution time: 0.3567471504211426 seconds

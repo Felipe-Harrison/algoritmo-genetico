@@ -1,44 +1,77 @@
 import time
 
-from algoritmo1 import algoritmoGenetico as algoritmo1
+from inputReader import getInputs
+from genetic import algoritmoGenetico
+from algoritmos.dynamic import dynamic
+from analisarResultados import analisarResultados,analisarFrequencia
+
+pathEntrada = "./inputs/"
+pathSaida = "./outputs/"
 
 def Main():
-
-    # Mochila 1
-    # Resposta ideal = 42
-    itensDisponiveis = [
-        { 'w': 5, "v": 3, },
-        { 'w': 4, "v": 6, },
-        { 'w': 3, "v": 9, },
-        { 'w': 2, "v": 12, },
-        { 'w': 1, "v": 15, },
-    ]
-    mochilaTamanhoMaximo = 10
-
-    # Mochila 2
-    # Resposta ideal = 60
-    # itensDisponiveis = [
-    #         { 'w': 1, "v": 20, },
-    #         { 'w': 2, "v": 5, },
-    #         { 'w': 3, "v": 10, },
-    #         { 'w': 8, "v": 40, },
-    #         { 'w': 7, "v": 15, },
-    #         { 'w': 4, "v": 25, },
-    #     ]
-    # mochilaTamanhoMaximo = 10
-
-    for i in range(5):
-        print(f"\nExecução {i+1}")
-        algoritmo1(
-            itensDisponiveis=itensDisponiveis,
-            capacidadeMaxMochila=mochilaTamanhoMaximo,
-            maxTamanhoGrupo = 10,
-            numeroInteracoes = 100
-        )
     
+    # Realizar a analise comparativa dos algoritmos
+    
+    entradas = getInputs(path=pathEntrada)
+    
+    numeroExecucoes = 30
+    
+    for entrada in entradas:
+        
+        temposGastos = []
+        valoresObtidos = []
+        
+        # Programacao dinamica
+        for _ in range(numeroExecucoes):
+            start = time.time()
+            valor = dynamic(entrada['input'])
+            finish = time.time() - start
+            valoresObtidos.append(valor)
+            temposGastos.append(finish)
 
+        analise = analisarResultados(temposGastos)
+        valores = analisarFrequencia(valoresObtidos)
+        
+        with open("./outputs/dynamic.out", "a+") as output_file:
+            output_file.write(f"{entrada['input']}\n")
+            output_file.write(f"Media tempo: {analise['media']}\n")
+            output_file.write(f"Desvio tempo: {analise['desvio']}\n")
+            output_file.write("Frequencia de valores\n")
+            for valor in valores:  
+                output_file.write(f"{valor[0]} {valor[1]}\n")
+            output_file.write("\n")
+        
+        temposGastos = []
+        valoresObtidos = []
+        
+        # Algoritmo Genético
+        for _ in range(numeroExecucoes):
+            start = time.time()
+            valor = algoritmoGenetico(
+                itensDisponiveis=entrada['itens'],
+                capacidadeMaxMochila=entrada['capacidadeMochila'],
+                maxTamanhoGrupo = 20,
+                numeroInteracoes = 50000,
+                taxaMutacao= 0.15,
+            )
+            finish = time.time() - start
+            valoresObtidos.append(valor.valor)
+            temposGastos.append(finish)
+
+        analise = analisarResultados(temposGastos)
+        valores = analisarFrequencia(valoresObtidos)
+        
+        with open("./outputs/genetic.out", "a+") as output_file:
+            output_file.write(f"{entrada['input']}\n")
+            output_file.write(f"Media tempo: {analise['media']}\n")
+            output_file.write(f"Desvio tempo: {analise['desvio']}\n")
+            output_file.write("Frequencia de valores\n")
+            for valor in valores:  
+                output_file.write(f"{valor[0]} {valor[1]}\n")
+            output_file.write("\n")     
+        
 if __name__ == "__main__":
     start = time.time()
     Main()
     finish = time.time() - start
-    print(finish)
+    print(f"Execução total da analise: {finish} segundos")
