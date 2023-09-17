@@ -1,7 +1,7 @@
 import time
 
 from inputReader import getInputs
-from genetic import algoritmoGenetico
+from algoritmos.genetic import algoritmoGenetico
 from algoritmos.dynamic import dynamic
 from analisarResultados import analisarResultados,analisarFrequencia
 

@@ -1,7 +1,5 @@
 #Algoritmo genético para resolução de problema da mochila binária
 import random
-from inputReader import getInputs
-import time
 
 class Cromossomo:
     def __init__(self,itens,tamanhoMaxMochila) -> None:
@@ -150,32 +148,3 @@ def algoritmoGenetico(
     #Retornar o melhor cromossomo obtido
     return grupo[0]
 
-if __name__ == "__main__":
-    
-    entradas = getInputs(path="./inputs/")
-    
-    numeroExecuções = 5
-    
-    for i in range(numeroExecuções):
-        
-        print(f"Teste {i+1}")
-        with open("./outputs/genetic.out", "a+") as output_file:
-            output_file.write(f"Teste {i+1}\n")
-        
-        start_time = time.time()
-        
-        for entrada in entradas:
-            melhorResultado = algoritmoGenetico(
-                itensDisponiveis=entrada['itens'],
-                capacidadeMaxMochila=entrada['capacidadeMochila'],
-                maxTamanhoGrupo = 20,
-                numeroInteracoes = 50000,
-                taxaMutacao=0.15,
-            )
-            with open("./outputs/genetic.out", "a+") as output_file:
-                output_file.write(f"Instancia {entrada['input']} : {melhorResultado.valor}\n") 
-                
-        execution_time = time.time() - start_time
-        print(f"Execution time: {execution_time} seconds\n")
-        with open("./outputs/genetic.out", "a+") as output_file:
-            output_file.write(f"Execution time: {execution_time} seconds\n")
